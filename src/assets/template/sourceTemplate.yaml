@@ -1,0 +1,60 @@
+type: http
+parameters:
+  bus:
+    label: Broker type
+    type: select
+    options: [PUBSUB, KAFKA]
+  min:
+    label: Min rate
+    placeholder: MINIMUM RPS
+    type: number
+  max:
+    label: Max rate
+    placeholder: MAXIMUM RPS
+    type: number
+---
+type: http2
+parameters:
+  brokerType:
+    label: Broker type
+    type: select
+    options: [PUBSUB, KAFKA]
+  minRate:
+    label: Min rate
+    placeholder: MINIMUM RPS
+    type: number
+  maxRate:
+    label: Max rate
+    placeholder: MAXIMUM RPS
+    type: number
+  maxRate2:
+    label: Max rate 2
+    placeholder: MAXIMUM RPS
+    type: number
+  maxRate3:
+    label: Max rate 3
+    placeholder: MAXIMUM RPS
+    type: number
+  maxRate4:
+    label: Max rate 4
+    placeholder: MAXIMUM RPS
+    type: number
+  maxRate5:
+    label: Max rate 5
+    placeholder: MAXIMUM RPS
+    type: number
+  maxRate6:
+    label: Max rate 6
+    placeholder: MAXIMUM RPS
+    type: number
+  maxRate7:
+    label: Max rate 7
+    placeholder: MAXIMUM RPS
+    type: number
+  maxRate8:
+    label: Max rate 8
+    placeholder: MAXIMUM RPS
+    type: number
+  sink.rsyslog.enabled:
+    label: RSysLog
+    type: boolean
