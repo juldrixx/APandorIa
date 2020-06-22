@@ -1,5 +1,8 @@
 module.exports = {
-  utils: require('./utils.routes'),
-  login: require('./login.routes'),
-  register: require('./register.routes'),
+  UtilsRoute: require('./utils.route'),
+
+  LoginRoute: require('./login.route'),
+  RegisterRoute: require('./register.route'),
+
+  UserRoute: require('./user.route'),
 };

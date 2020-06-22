@@ -12,8 +12,6 @@ const router = express.Router();
  *    responses:
  *      '200':
  *        description: Successful Response
- *      '400':
- *        description: Bad Request
  *      '403':
  *        description: Forbidden
  */

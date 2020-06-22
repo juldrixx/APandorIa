@@ -10,9 +10,14 @@ const middlewares = require('./js/middlewares');
  *    description: Authentification management
  *  - name: Utils
  *    description: Utils management
+ *  - name: User
+ *    description: User management
  */
-router.use('/login', routes.login);
-router.use('/register', routes.register);
-router.use('/utils', middlewares.checkJWT.check, routes.utils);
+router.use('/login', routes.LoginRoute);
+router.use('/register', routes.RegisterRoute);
+
+router.use('/users', middlewares.CheckJWTMiddleware.check, routes.UserRoute);
+
+router.use('/utils', middlewares.CheckJWTMiddleware.check, routes.UtilsRoute);
 
 module.exports = router;

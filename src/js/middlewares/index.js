@@ -1,3 +1,3 @@
 module.exports = {
-  checkJWT: require('./checkJWT.middlewares'),
+  CheckJWTMiddleware: require('./checkJWT.middleware'),
 };

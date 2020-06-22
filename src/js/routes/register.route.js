@@ -1,11 +1,12 @@
 const express = require('express');
+const { AuthController } = require('../controllers');
 const router = express.Router();
 
 /**
  * @swagger
  * /register:
  *  post:
- *    summary: Call to register
+ *    summary: Register a new User
  *    tags: [Authentification]
  *    requestBody:
  *      content:
@@ -14,30 +15,21 @@ const router = express.Router();
  *            type: object
  *            required:
  *              - username
+ *              - email
  *              - password
  *            properties:
  *              username:
  *                type: string
+ *              email:
+ *                type: string
  *              password:
  *                type: string
  *    responses:
- *      '201':
- *        description: Created
- *      '400':
- *        description: Bad Request
+ *      '200':
+ *        description: Successful Response
+ *      '500':
+ *        description: Internal Server Error
  */
-router.post('/', (req, res) => {
-  const { username, password } = req.body;
-
-  console.log(`${username} is trying to register with the password: ${password}`);
-
-  if (username && password) {
-    // TODO
-    res.status(201).send('In progress...');
-  }
-  else {
-    res.status(400).send('Authentication failed! Please check the request.');
-  }
-});
+router.post('/', AuthController.register);
 
 module.exports = router;
