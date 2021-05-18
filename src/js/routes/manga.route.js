@@ -1,13 +1,18 @@
 const express = require('express');
 const router = express.Router();
-const { UserController } = require('../controllers');
+const routes = require('./manga');
+const { MangaController } = require('../controllers');
+const { MangadexUtil } = require('../utils');
+
+router.use('/search', routes.MangaSearchRoute);
+router.use('/list', routes.MangaListRoute);
 
 /**
  * @swagger
- * /users:
+ * /mangas:
  *  post:
- *    summary: Create a new User
- *    tags: [User]
+ *    summary: Create a new Manga
+ *    tags: [Manga]
  *    security:
  *      - bearerAuth: []
  *    requestBody:
@@ -16,19 +21,22 @@ const { UserController } = require('../controllers');
  *          schema:
  *            type: object
  *            required:
- *              - username
- *              - email
- *              - password
- *              - pseudo
+ *              - name
+ *              - url
+ *              - cover
+ *              - last_chapter
+ *              - mangadexId
  *            properties:
- *              username:
+ *              name:
  *                type: string
- *              email:
+ *              url:
  *                type: string
- *              password:
+ *              cover:
  *                type: string
- *              pseudo:
- *                type: string
+ *              last_chapter:
+ *                type: integer
+ *              mangadexId:
+ *                type: integer
  *    responses:
  *      '200':
  *        description: Successful Response
@@ -37,14 +45,41 @@ const { UserController } = require('../controllers');
  *      '500':
  *        description: Internal Server Error
  */
-router.post('/', UserController.create);
+router.post('/', (req, res) => {
+  if (!req.body.name && !req.body.url && !req.body.cover && !req.body.last_chapter) {
+    MangadexUtil.connect()
+      .then(() => {
+        MangadexUtil.searchById(req.body.mangadexId)
+          .then(manga => {
+            req.body = {
+              ...req.body,
+              name: manga.title,
+              url: manga.getFullURL('id'),
+              cover: manga.getFullURL('cover'),
+              last_chapter: manga.chapters[0].chapter,
+            };
+            
+            MangaController.create(req, res);
+          })
+          .catch(err => {
+            res.status(500).send({ message: err.message });
+          });
+      })
+      .catch(err => {
+        res.status(500).send({ message: err.message });
+      });
+  }
+  else {
+    MangaController.create(req, res);
+  }
+});
 
 /**
  * @swagger
- * /users:
+ * /mangas:
  *  get:
- *    summary: Retrieve all Users
- *    tags: [User]
+ *    summary: Retrieve all Mangas
+ *    tags: [Manga]
  *    security:
  *      - bearerAuth: []
  *    parameters:
@@ -76,20 +111,20 @@ router.post('/', UserController.create);
  *      '500':
  *        description: Internal Server Error
  */
-router.get('/', UserController.findAll);
+router.get('/', MangaController.findAll);
 
 /**
  * @swagger
- * /users/{userId}:
+ * /mangas/{mangaId}:
  *  get:
- *    summary: Retrieve a single User with userId
- *    tags: [User]
+ *    summary: Retrieve a single Manga with mangaId
+ *    tags: [Manga]
  *    security:
  *      - bearerAuth: []
  *    parameters:
  *      - in: path
- *        name: userId
- *        description: User's id
+ *        name: mangaId
+ *        description: Manga's id
  *        type: integer
  *        required: true
  *    responses:
@@ -100,20 +135,20 @@ router.get('/', UserController.findAll);
  *      '500':
  *        description: Internal Server Error
  */
-router.get('/:userId', UserController.findOne);
+router.get('/:mangaId', MangaController.findOne);
 
 /**
  * @swagger
- * /users/{userId}:
+ * /mangas/{mangaId}:
  *  put:
- *    summary: Update a User with userId
- *    tags: [User]
+ *    summary: Update a Manga with mangaId
+ *    tags: [Manga]
  *    security:
  *      - bearerAuth: []
  *    parameters:
  *      - in: path
- *        name: userId
- *        description: User's id
+ *        name: mangaId
+ *        description: Manga's id
  *        type: integer
  *        required: true
  *    requestBody:
@@ -122,19 +157,22 @@ router.get('/:userId', UserController.findOne);
  *          schema:
  *            type: object
  *            required:
- *              - username
- *              - email
- *              - password
- *              - pseudo
+ *              - name
+ *              - url
+ *              - cover
+ *              - last_chapter
+ *              - mangadexId
  *            properties:
- *              username:
+ *              name:
  *                type: string
- *              email:
+ *              url:
  *                type: string
- *              password:
+ *              cover:
  *                type: string
- *              pseudo:
- *                type: string
+ *              last_chapter:
+ *                type: integer
+ *              mangadexId:
+ *                type: integer
  *    responses:
  *      '200':
  *        description: Successful Response
@@ -143,20 +181,20 @@ router.get('/:userId', UserController.findOne);
  *      '500':
  *        description: Internal Server Error
  */
-router.put('/:userId', UserController.update);
+router.put('/:mangaId', MangaController.update);
 
 /**
  * @swagger
- * /users/{userId}:
+ * /mangas/{mangaId}:
  *  delete:
- *    summary: Delete a User with userId
- *    tags: [User]
+ *    summary: Delete a Manga with mangaId
+ *    tags: [Manga]
  *    security:
  *      - bearerAuth: []
  *    parameters:
  *      - in: path
- *        name: userId
- *        description: User's id
+ *        name: mangaId
+ *        description: Manga's id
  *        type: integer
  *        required: true
  *    responses:
@@ -167,14 +205,14 @@ router.put('/:userId', UserController.update);
  *      '500':
  *        description: Internal Server Error
  */
-router.delete('/:userId', UserController.delete);
+router.delete('/:mangaId', MangaController.delete);
 
 /**
  * @swagger
- * /users:
+ * /mangas:
  *  delete:
- *    summary: Delete all the Users
- *    tags: [User]
+ *    summary: Delete all the Mangas
+ *    tags: [Manga]
  *    security:
  *      - bearerAuth: []
  *    responses:
@@ -185,6 +223,6 @@ router.delete('/:userId', UserController.delete);
  *      '500':
  *        description: Internal Server Error
  */
-router.delete('/', UserController.deleteAll);
+router.delete('/', MangaController.deleteAll);
 
 module.exports = router;

@@ -1,6 +1,6 @@
-const { UserModel } = require('../models');
+const { RoleModel } = require('../models');
 
-// Create and Save a new User
+// Create and Save a new Role
 exports.create = (req, res) => {
   // Validate request
   if (!req.body) {
@@ -9,27 +9,23 @@ exports.create = (req, res) => {
     });
   }
 
-  // Create a User
-  const user = new UserModel({
-    username: req.body.username,
-    email: req.body.email,
-    password: req.body.password,
-    pseudo: req.body.pseudo,
-    roleId: 1,
+  // Create a Role
+  const role = new RoleModel({
+    name: req.body.name,
   });
 
-  // Save User in the database
-  UserModel.create(user, (err, data) => {
+  // Save Role in the database
+  RoleModel.create(role, (err, data) => {
     if (err)
       res.status(500).send({
         message:
-          err.message || 'Some error occurred while creating the UserModel.'
+          err.message || 'Some error occurred while creating the RoleModel.'
       });
     else res.send(data);
   });
 };
 
-// Retrieve all Users from the database.
+// Retrieve all Roles from the database.
 exports.findAll = (req, res) => {
   if (req.query.perPage && req.query.page) {
     const perPage = parseInt(req.query.perPage);
@@ -38,18 +34,18 @@ exports.findAll = (req, res) => {
     const startIndex = (page - 1) * perPage;
     const endIndex = page * perPage;
 
-    UserModel.getAllPaginate(startIndex, perPage, (err, data) => {
+    RoleModel.getAllPaginate(startIndex, perPage, (err, data) => {
       if (err)
         res.status(500).send({
           message:
-            err.message || 'Some error occurred while retrieving users.'
+            err.message || 'Some error occurred while retrieving roles.'
         });
       else {
-        UserModel.count((err, count) => {
+        RoleModel.count((err, count) => {
           if (err)
             res.status(500).send({
               message:
-                err.message || 'Some error occurred while counting users.'
+                err.message || 'Some error occurred while counting roles.'
             });
           else {
             const results = {};
@@ -77,35 +73,35 @@ exports.findAll = (req, res) => {
     });
   }
   else {
-    UserModel.getAll((err, data) => {
+    RoleModel.getAll((err, data) => {
       if (err)
         res.status(500).send({
           message:
-            err.message || 'Some error occurred while retrieving users.'
+            err.message || 'Some error occurred while retrieving roles.'
         });
       else res.send(data);
     });
-  }  
+  }
 };
 
-// Find a single User with a userId
+// Find a single Role with a roleId
 exports.findOne = (req, res) => {
-  UserModel.findById(req.params.userId, (err, data) => {
+  RoleModel.findById(req.params.roleId, (err, data) => {
     if (err) {
       if (err.kind === 'not_found') {
         res.status(404).send({
-          message: `Not found User with id ${req.params.userId}.`
+          message: `Not found Role with id ${req.params.roleId}.`
         });
       } else {
         res.status(500).send({
-          message: 'Error retrieving User with id ' + req.params.userId
+          message: 'Error retrieving Role with id ' + req.params.roleId
         });
       }
     } else res.send(data);
   });
 };
 
-// Update a User identified by the userId in the request
+// Update a Role identified by the roleId in the request
 exports.update = (req, res) => {
   // Validate Request
   if (!req.body) {
@@ -114,18 +110,18 @@ exports.update = (req, res) => {
     });
   }
 
-  UserModel.updateById(
-    req.params.userId,
-    new UserModel(req.body),
+  RoleModel.updateById(
+    req.params.roleId,
+    new RoleModel(req.body),
     (err, data) => {
       if (err) {
         if (err.kind === 'not_found') {
           res.status(404).send({
-            message: `Not found User with id ${req.params.userId}.`
+            message: `Not found Role with id ${req.params.roleId}.`
           });
         } else {
           res.status(500).send({
-            message: 'Error updating User with id ' + req.params.userId
+            message: 'Error updating Role with id ' + req.params.roleId
           });
         }
       } else res.send(data);
@@ -133,31 +129,31 @@ exports.update = (req, res) => {
   );
 };
 
-// Delete a User with the specified userId in the request
+// Delete a Role with the specified roleId in the request
 exports.delete = (req, res) => {
-  UserModel.remove(req.params.userId, (err, data) => {
+  RoleModel.remove(req.params.roleId, (err, data) => {
     if (err) {
       if (err.kind === 'not_found') {
         res.status(404).send({
-          message: `Not found User with id ${req.params.userId}.`
+          message: `Not found Role with id ${req.params.roleId}.`
         });
       } else {
         res.status(500).send({
-          message: 'Could not delete User with id ' + req.params.userId
+          message: 'Could not delete Role with id ' + req.params.roleId
         });
       }
-    } else res.send({ message: `User was deleted successfully!` });
+    } else res.send({ message: `Role was deleted successfully!` });
   });
 };
 
-// Delete all Users from the database.
+// Delete all Roles from the database.
 exports.deleteAll = (req, res) => {
-  UserModel.removeAll((err, data) => {
+  RoleModel.removeAll((err, data) => {
     if (err)
       res.status(500).send({
         message:
-          err.message || 'Some error occurred while removing all users.'
+          err.message || 'Some error occurred while removing all roles.'
       });
-    else res.send({ message: `All Users were deleted successfully!` });
+    else res.send({ message: `All Roles were deleted successfully!` });
   });
 };

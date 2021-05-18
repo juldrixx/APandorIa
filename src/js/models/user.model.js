@@ -6,6 +6,8 @@ const UserModel = function (user) {
   this.username = user.username;
   this.email = user.email;
   this.password = AuthUtil.encryptPassword(user.password);
+  this.pseudo = user.pseudo;
+  this.roleId = user.roleId;
 };
 
 UserModel.create = (newUser, result) => {
@@ -40,8 +42,21 @@ UserModel.findById = (userId, result) => {
   });
 };
 
-UserModel.getAll = result => {
-  sql.query('SELECT * FROM users', (err, res) => {
+UserModel.getAll = (complement = '', result) => {
+  sql.query(`SELECT * FROM users ${complement}`, (err, res) => {
+    if (err) {
+      console.log('error: ', err);
+      result(null, err);
+      return;
+    }
+
+    console.log('users: ', res);
+    result(null, res);
+  });
+};
+
+UserModel.getAllPaginate = (startIndex, perPage, complement = '', result) => {
+  sql.query(`SELECT * FROM users LIMIT ${complement} ${perPage} OFFSET ${startIndex}`, (err, res) => {
     if (err) {
       console.log('error: ', err);
       result(null, err);
@@ -55,8 +70,8 @@ UserModel.getAll = result => {
 
 UserModel.updateById = (id, user, result) => {
   sql.query(
-    'UPDATE users SET username = ?, email = ?, password = ? WHERE id = ?',
-    [user.username, user.email, user.password, id],
+    'UPDATE users SET username = ?, email = ?, password = ?, pseudo = ?, roleId = ? WHERE id = ?',
+    [user.username, user.email, user.password, user.pseudo, user.roleId, id],
     (err, res) => {
       if (err) {
         console.log('error: ', err);
@@ -107,6 +122,19 @@ UserModel.removeAll = result => {
     result(null, res);
   });
 };
+
+UserModel.count = (complement = '', result) => {
+  sql.query(`SELECT COUNT(*) AS count FROM users ${complement}`, (err, res) => {
+    if (err) {
+      console.log('error: ', err);
+      result(null, err);
+      return;
+    }
+
+    console.log(`${res[0].count} rows in users`);
+    result(null, res[0].count);
+  });
+}
 
 UserModel.findByUsername = (username, result) => {
   sql.query(`SELECT * FROM users WHERE username = "${username}"`, (err, res) => {

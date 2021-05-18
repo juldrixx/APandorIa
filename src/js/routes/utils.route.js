@@ -16,7 +16,7 @@ const router = express.Router();
  *        description: Forbidden
  */
 router.get('/verifyToken', (req, res) => {
-  res.status('200').send('Success');
+  res.send('Success');
 });
 
 module.exports = router;

@@ -1,12 +1,13 @@
-const { UserModel } = require('../models');
+const { UserModel, RoleModel } = require('../models');
 const { AuthUtil } = require('../utils/index.js');
 const jwt = require('jsonwebtoken');
 const UserController = require('./user.controller');
+const { User } = require('mangadex-full-api');
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
 exports.login = (req, res) => {
-  UserModel.findByUsername(req.body.username, (err, data) => {
+  UserModel.findByUsername(req.body.username, (err, dataUser) => {
     if (err) {
       if (err.kind === 'not_found') {
         res.status(404).send({
@@ -18,13 +19,21 @@ exports.login = (req, res) => {
         });
       }
     } else {
-      if (AuthUtil.verifyPassword(req.body.password, data.password)) {
+      if (AuthUtil.verifyPassword(req.body.password, dataUser.password)) {
         const token = jwt.sign({ username: req.body.username }, JWT_SECRET, { expiresIn: '24h' });
 
-        res.json({
-          message: 'Authentication successful!',
-          user: data,
-          token: token
+        RoleModel.findById(dataUser.roleId, (err, dataRole) => {
+          if (err) res.status(500).send({ message: 'Error retrieving Role ' + dataUser.roleId });
+          else {
+            res.json({
+              message: 'Authentication successful!',
+              user: {
+                ...dataUser,
+                roleName: dataRole.name,
+              },
+              token: token
+            });
+          }
         });
       }
       else {

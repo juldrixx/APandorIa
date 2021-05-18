@@ -1,13 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const { UserController } = require('../controllers');
+const { RoleController } = require('../controllers');
 
 /**
  * @swagger
- * /users:
+ * /roles:
  *  post:
- *    summary: Create a new User
- *    tags: [User]
+ *    summary: Create a new Role
+ *    tags: [Role]
  *    security:
  *      - bearerAuth: []
  *    requestBody:
@@ -16,18 +16,9 @@ const { UserController } = require('../controllers');
  *          schema:
  *            type: object
  *            required:
- *              - username
- *              - email
- *              - password
- *              - pseudo
+ *              - name
  *            properties:
- *              username:
- *                type: string
- *              email:
- *                type: string
- *              password:
- *                type: string
- *              pseudo:
+ *              name:
  *                type: string
  *    responses:
  *      '200':
@@ -37,14 +28,14 @@ const { UserController } = require('../controllers');
  *      '500':
  *        description: Internal Server Error
  */
-router.post('/', UserController.create);
+router.post('/', RoleController.create);
 
 /**
  * @swagger
- * /users:
+ * /roles:
  *  get:
- *    summary: Retrieve all Users
- *    tags: [User]
+ *    summary: Retrieve all Roles
+ *    tags: [Role]
  *    security:
  *      - bearerAuth: []
  *    parameters:
@@ -76,20 +67,20 @@ router.post('/', UserController.create);
  *      '500':
  *        description: Internal Server Error
  */
-router.get('/', UserController.findAll);
+router.get('/', RoleController.findAll);
 
 /**
  * @swagger
- * /users/{userId}:
+ * /roles/{roleId}:
  *  get:
- *    summary: Retrieve a single User with userId
- *    tags: [User]
+ *    summary: Retrieve a single Role with roleId
+ *    tags: [Role]
  *    security:
  *      - bearerAuth: []
  *    parameters:
  *      - in: path
- *        name: userId
- *        description: User's id
+ *        name: roleId
+ *        description: Role's id
  *        type: integer
  *        required: true
  *    responses:
@@ -100,20 +91,20 @@ router.get('/', UserController.findAll);
  *      '500':
  *        description: Internal Server Error
  */
-router.get('/:userId', UserController.findOne);
+router.get('/:roleId', RoleController.findOne);
 
 /**
  * @swagger
- * /users/{userId}:
+ * /roles/{roleId}:
  *  put:
- *    summary: Update a User with userId
- *    tags: [User]
+ *    summary: Update a Role with roleId
+ *    tags: [Role]
  *    security:
  *      - bearerAuth: []
  *    parameters:
  *      - in: path
- *        name: userId
- *        description: User's id
+ *        name: roleId
+ *        description: Role's id
  *        type: integer
  *        required: true
  *    requestBody:
@@ -122,18 +113,9 @@ router.get('/:userId', UserController.findOne);
  *          schema:
  *            type: object
  *            required:
- *              - username
- *              - email
- *              - password
- *              - pseudo
+ *              - name
  *            properties:
- *              username:
- *                type: string
- *              email:
- *                type: string
- *              password:
- *                type: string
- *              pseudo:
+ *              rolename:
  *                type: string
  *    responses:
  *      '200':
@@ -143,20 +125,20 @@ router.get('/:userId', UserController.findOne);
  *      '500':
  *        description: Internal Server Error
  */
-router.put('/:userId', UserController.update);
+router.put('/:roleId', RoleController.update);
 
 /**
  * @swagger
- * /users/{userId}:
+ * /roles/{roleId}:
  *  delete:
- *    summary: Delete a User with userId
- *    tags: [User]
+ *    summary: Delete a Role with roleId
+ *    tags: [Role]
  *    security:
  *      - bearerAuth: []
  *    parameters:
  *      - in: path
- *        name: userId
- *        description: User's id
+ *        name: roleId
+ *        description: Role's id
  *        type: integer
  *        required: true
  *    responses:
@@ -167,14 +149,14 @@ router.put('/:userId', UserController.update);
  *      '500':
  *        description: Internal Server Error
  */
-router.delete('/:userId', UserController.delete);
+router.delete('/:roleId', RoleController.delete);
 
 /**
  * @swagger
- * /users:
+ * /roles:
  *  delete:
- *    summary: Delete all the Users
- *    tags: [User]
+ *    summary: Delete all the Roles
+ *    tags: [Role]
  *    security:
  *      - bearerAuth: []
  *    responses:
@@ -185,6 +167,6 @@ router.delete('/:userId', UserController.delete);
  *      '500':
  *        description: Internal Server Error
  */
-router.delete('/', UserController.deleteAll);
+router.delete('/', RoleController.deleteAll);
 
 module.exports = router;

@@ -5,4 +5,6 @@ module.exports = {
   RegisterRoute: require('./register.route'),
 
   UserRoute: require('./user.route'),
+  RoleRoute: require('./role.route'),
+  MangaRoute: require('./manga.route'),
 };
