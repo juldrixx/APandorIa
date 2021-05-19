@@ -56,7 +56,7 @@ UserModel.getAll = (complement = '', result) => {
 };
 
 UserModel.getAllPaginate = (startIndex, perPage, complement = '', result) => {
-  sql.query(`SELECT * FROM users LIMIT ${complement} ${perPage} OFFSET ${startIndex}`, (err, res) => {
+  sql.query(`SELECT * FROM users ${complement} LIMIT ${perPage} OFFSET ${startIndex}`, (err, res) => {
     if (err) {
       console.log('error: ', err);
       result(null, err);

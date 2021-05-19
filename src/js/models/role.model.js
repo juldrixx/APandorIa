@@ -52,7 +52,7 @@ RoleModel.getAll = (complement = '', result) => {
 };
 
 RoleModel.getAllPaginate = (startIndex, perPage, complement = '', result) => {
-  sql.query(`SELECT * FROM roles LIMIT ${complement} ${perPage} OFFSET ${startIndex}`, (err, res) => {
+  sql.query(`SELECT * FROM roles ${complement} LIMIT ${perPage} OFFSET ${startIndex}`, (err, res) => {
     if (err) {
       console.log('error: ', err);
       result(null, err);

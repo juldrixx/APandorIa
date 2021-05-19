@@ -31,6 +31,11 @@ exports.create = (req, res) => {
 
 // Retrieve all Users from the database.
 exports.findAll = (req, res) => {
+  let complement = '';
+  if (req.query.filteredBy && req.query.filteredWith) {
+    complement += `WHERE ${req.query.filteredBy} LIKE '%${req.query.filteredWith}%'`;
+  }
+
   if (req.query.perPage && req.query.page) {
     const perPage = parseInt(req.query.perPage);
     const page = parseInt(req.query.page);
@@ -77,7 +82,7 @@ exports.findAll = (req, res) => {
     });
   }
   else {
-    UserModel.getAll((err, data) => {
+    UserModel.getAll(complement, (err, data) => {
       if (err)
         res.status(500).send({
           message:
