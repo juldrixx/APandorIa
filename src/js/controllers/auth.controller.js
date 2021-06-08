@@ -2,7 +2,6 @@ const { UserModel, RoleModel } = require('../models');
 const { AuthUtil } = require('../utils/index.js');
 const jwt = require('jsonwebtoken');
 const UserController = require('./user.controller');
-const { User } = require('mangadex-full-api');
 
 const JWT_SECRET = process.env.JWT_SECRET;
 

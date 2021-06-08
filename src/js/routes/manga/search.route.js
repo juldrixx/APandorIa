@@ -4,18 +4,33 @@ const router = express.Router();
 
 /**
  * @swagger
- * /mangas/search/{mangaName}:
+ * /mangas/search:
  *  get:
  *    summary: Search a manga
  *    tags: [Manga]
  *    security:
  *      - bearerAuth: []
  *    parameters:
- *      - in: path
- *        name: mangaName
+ *      - in: query
+ *        name: name
  *        description: Manga name
  *        type: string
  *        required: true
+ *      - in: query
+ *        name: perPage
+ *        schema:
+ *          type: integer
+ *          default: 10
+ *          minimum: 1
+ *          maximum: 100
+ *        description: The numbers of items per page to return ([ 1 .. 100 ])
+ *      - in: query
+ *        name: page
+ *        schema:
+ *          type: integer
+ *          default: 1
+ *          minimum: 1
+ *        description: The page to return
  *    responses:
  *      '200':
  *        description: Successful Response
@@ -24,32 +39,69 @@ const router = express.Router();
  *      '500':
  *        description: Internal Server Error
  */
-router.get('/:mangaName', (req, res) => {
-  MangadexUtil.connect()
-    .then(() => {
-      MangadexUtil.searchByName(req.params.mangaName)
-        .then(mangaIds => {
-          const promise = (mangaId) => new Promise((resolve, reject) => {
-            MangadexUtil.searchById(mangaId)
-              .then(manga => resolve(manga))
-              .catch(err => reject(err));
-          });
+router.get('/', (req, res) => {
+  const call = async () => {
+    if (!req.query.name) throw new Error('No name was provided.');
 
-          Promise.all(mangaIds.slice(0, 5).map(promise))
-            .then(mangas => {
-              res.json(mangas.map(manga => ({ id: manga.id, title: manga.title, cover: manga.getFullURL('cover'), url: manga.getFullURL('id') })));
-            })
-            .catch(err => {
-              res.status(500).send({ message: err });
-            });
-        })
-        .catch(err => {
-          res.status(500).send({ message: err });
-        });
-    })
-    .catch(err => {
-      res.status(500).send({ message: err });
-    });
+    let perPage = 10;
+    let page = 1;
+
+    if (req.query.perPage && req.query.page) {
+      perPage = parseInt(req.query.perPage);
+      page = parseInt(req.query.page);
+
+      if (perPage < 1 || perPage > 100 || isNaN(perPage)) throw new Error('The number of items per page must be a number between 1 and 100.');
+      if (page < 1 || isNaN(page)) throw new Error('The page number must be a positive number.');
+    }
+
+    const startIndex = (page - 1) * perPage;
+    const endIndex = page * perPage;
+    const limit = perPage;
+    const offset = (page - 1) * limit;
+
+    const searchResults = await MangadexUtil.searchMangaByName(req.query.name, limit, offset);
+    const results = {};
+    results.result = await Promise.all(searchResults.results.map(async (searchResult) => {
+      const result = {
+        id: searchResult.data.id,
+        title: searchResult.data.attributes.title.en || Object.values(searchResult.data.attributes.title)[0],
+        description: searchResult.data.attributes.description.en || Object.values(searchResult.data.attributes.description)[0],
+        lastChapter: searchResult.data.attributes.lastChapter || 'N/A',
+        url: MangadexUtil.getMangaUrl(searchResult.data.id)
+      }
+      const coverInfo = searchResult.relationships.filter(r => r.type === 'cover_art')[0];
+
+      if (coverInfo) {
+        const cover = await MangadexUtil.getCoverById(coverInfo.id);
+        result.cover = MangadexUtil.getCoverUrl(result.id, cover.data.attributes.fileName);
+      }
+
+      return result;
+    }));
+
+    if (endIndex < searchResults.total) {
+      results.next = {
+        perPage: perPage,
+        page: page + 1
+      };
+    }
+
+    if (startIndex > 0) {
+      results.previous = {
+        perPage: perPage,
+        page: page - 1
+      }
+    }
+
+    results.numberOfPage = Math.ceil(searchResults.total / perPage);
+
+    return res.status(200).json(results);
+  }
+
+  call().catch(error => {
+    console.error(error);
+    res.status(500).send(error.message);
+  })
 });
 
 module.exports = router;

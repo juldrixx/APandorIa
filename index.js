@@ -1,16 +1,14 @@
 require('dotenv').config();
 const express = require('express');
-const got = require('got');
 const cors = require('cors');
 const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerUI = require('swagger-ui-express');
 const path = require('path');
-const bodyParser = require('body-parser');
 const app = express();
 const API = require('./src');
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
+app.use(express.json());
+app.use(express.urlencoded({
   extended: true
 }));
 
@@ -41,7 +39,7 @@ const swaggerOptions = {
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
 app.use(cors());
-app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
+app.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
 app.use('/api', API);
 app.use('/', express.static('public'));
 app.get('*', function (request, response) {
