@@ -1,4 +1,4 @@
-const got = require('got');
+const got = (...args) => import('got').then(({default: got}) => got(...args));
 
 const MANGADEX_URL = process.env.MANGADEX_URL;
 const MANGADEX_API = process.env.MANGADEX_API;
