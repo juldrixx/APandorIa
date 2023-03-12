@@ -17,15 +17,12 @@ const router = express.Router();
  *              - username
  *              - email
  *              - password
- *              - pseudo
  *            properties:
  *              username:
  *                type: string
  *              email:
  *                type: string
  *              password:
- *                type: string
- *              pseudo:
  *                type: string
  *    responses:
  *      '200':

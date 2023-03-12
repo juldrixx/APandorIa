@@ -6,7 +6,6 @@ const UserModel = function (user) {
   this.username = user.username;
   this.email = user.email;
   this.password = AuthUtil.encryptPassword(user.password);
-  this.pseudo = user.pseudo;
   this.roleId = user.roleId;
 };
 
@@ -70,8 +69,8 @@ UserModel.getAllPaginate = (startIndex, perPage, complement = '', result) => {
 
 UserModel.updateById = (id, user, result) => {
   sql.query(
-    'UPDATE users SET username = ?, email = ?, password = ?, pseudo = ?, roleId = ? WHERE id = ?',
-    [user.username, user.email, user.password, user.pseudo, user.roleId, id],
+    'UPDATE users SET username = ?, email = ?, password = ?, roleId = ? WHERE id = ?',
+    [user.username, user.email, user.password, user.roleId, id],
     (err, res) => {
       if (err) {
         console.log('error: ', err);

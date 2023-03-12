@@ -19,15 +19,12 @@ const { UserController } = require('../controllers');
  *              - username
  *              - email
  *              - password
- *              - pseudo
  *            properties:
  *              username:
  *                type: string
  *              email:
  *                type: string
  *              password:
- *                type: string
- *              pseudo:
  *                type: string
  *    responses:
  *      '200':
@@ -125,15 +122,12 @@ router.get('/:userId', UserController.findOne);
  *              - username
  *              - email
  *              - password
- *              - pseudo
  *            properties:
  *              username:
  *                type: string
  *              email:
  *                type: string
  *              password:
- *                type: string
- *              pseudo:
  *                type: string
  *    responses:
  *      '200':
