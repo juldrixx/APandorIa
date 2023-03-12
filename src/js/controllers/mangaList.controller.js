@@ -40,7 +40,6 @@ exports.findAll = (req, res) => {
     const page = parseInt(req.query.page);
 
     const startIndex = (page - 1) * perPage;
-    const endIndex = page * perPage;
 
     MangaListModel.getAllPaginate(startIndex, perPage, complement, (err, data) => {
       if (err)
@@ -57,21 +56,8 @@ exports.findAll = (req, res) => {
             });
           else {
             const results = {};
-
-            if (endIndex < count) {
-              results.next = {
-                perPage: perPage,
-                page: page + 1
-              };
-            }
-
-            if (startIndex > 0) {
-              results.previous = {
-                perPage: perPage,
-                page: page - 1
-              }
-            }
-
+            results.page = page;
+            results.total = count;
             results.numberOfPage = Math.ceil(count / perPage);
             results.result = data;
             res.send(results);
@@ -104,7 +90,6 @@ exports.findOne = (req, res) => {
     const page = parseInt(req.query.page);
 
     const startIndex = (page - 1) * perPage;
-    const endIndex = page * perPage;
 
     MangaListModel.findByIdPaginate(req.params.userId, req.params.mangaId, startIndex, perPage, complement, (err, data) => {
       if (err) {
@@ -127,21 +112,8 @@ exports.findOne = (req, res) => {
             });
           else {
             const results = {};
-
-            if (endIndex < count) {
-              results.next = {
-                perPage: perPage,
-                page: page + 1
-              };
-            }
-
-            if (startIndex > 0) {
-              results.previous = {
-                perPage: perPage,
-                page: page - 1
-              }
-            }
-
+            results.page = page;
+            results.total = count;
             results.numberOfPage = Math.ceil(count / perPage);
             results.result = data;
             res.send(results);

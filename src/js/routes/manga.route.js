@@ -36,7 +36,7 @@ router.use('/list', routes.MangaListRoute);
  *              last_chapter:
  *                type: integer
  *              mangadexId:
- *                type: integer
+ *                type: string
  *    responses:
  *      '200':
  *        description: Successful Response
@@ -172,7 +172,7 @@ router.get('/:mangaId', MangaController.findOne);
  *              last_chapter:
  *                type: integer
  *              mangadexId:
- *                type: integer
+ *                type: string
  *    responses:
  *      '200':
  *        description: Successful Response

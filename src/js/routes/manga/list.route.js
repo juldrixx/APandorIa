@@ -16,12 +16,12 @@ const router = express.Router();
  *          schema:
  *            type: object
  *            required:
- *              - mangaListId
+ *              - userId
  *              - mangaId
  *              - favorite
  *              - current_chapter
  *            properties:
- *              mangaListId:
+ *              userId:
  *                type: integer
  *              mangaId:
  *                type: integer

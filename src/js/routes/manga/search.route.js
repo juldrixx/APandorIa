@@ -53,21 +53,18 @@ router.get('/', (req, res) => {
       if (perPage < 1 || perPage > 100 || isNaN(perPage)) throw new Error('The number of items per page must be a number between 1 and 100.');
       if (page < 1 || isNaN(page)) throw new Error('The page number must be a positive number.');
     }
-
-    const startIndex = (page - 1) * perPage;
-    const endIndex = page * perPage;
     const limit = perPage;
     const offset = (page - 1) * limit;
 
     const searchResults = await MangadexUtil.searchMangaByName(req.query.name, limit, offset);
     const results = {};
-    results.result = await Promise.all(searchResults.results.map(async (searchResult) => {
+    results.result = await Promise.all(searchResults.data.map(async (searchResult) => {
       const result = {
-        id: searchResult.data.id,
-        title: searchResult.data.attributes.title.en || Object.values(searchResult.data.attributes.title)[0],
-        description: searchResult.data.attributes.description.en || Object.values(searchResult.data.attributes.description)[0],
-        lastChapter: searchResult.data.attributes.lastChapter || 'N/A',
-        url: MangadexUtil.getMangaUrl(searchResult.data.id)
+        id: searchResult.id,
+        title: searchResult.attributes.title.en || Object.values(searchResult.attributes.title)[0],
+        description: searchResult.attributes.description.en || Object.values(searchResult.attributes.description)[0],
+        lastChapter: searchResult.attributes.lastChapter || 'N/A',
+        url: MangadexUtil.getMangaUrl(searchResult.id)
       }
       const coverInfo = searchResult.relationships.filter(r => r.type === 'cover_art')[0];
 
@@ -79,20 +76,8 @@ router.get('/', (req, res) => {
       return result;
     }));
 
-    if (endIndex < searchResults.total) {
-      results.next = {
-        perPage: perPage,
-        page: page + 1
-      };
-    }
-
-    if (startIndex > 0) {
-      results.previous = {
-        perPage: perPage,
-        page: page - 1
-      }
-    }
-
+    results.page = page;
+    results.total = searchResults.total;
     results.numberOfPage = Math.ceil(searchResults.total / perPage);
 
     return res.status(200).json(results);
