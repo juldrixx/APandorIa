@@ -10,7 +10,7 @@ const MangaModel = function (manga) {
 };
 
 MangaModel.create = (newManga, result) => {
-  sql.query('INSERT INTO mangas SET ?', newManga, (err, res) => {
+  sql.query('INSERT INTO manga SET ?', newManga, (err, res) => {
     if (err) {
       console.log('error: ', err);
       result(err, null);
@@ -23,7 +23,7 @@ MangaModel.create = (newManga, result) => {
 };
 
 MangaModel.findById = (mangaId, result) => {
-  sql.query(`SELECT * FROM mangas WHERE id = ${mangaId}`, (err, res) => {
+  sql.query(`SELECT * FROM manga WHERE id = ${mangaId}`, (err, res) => {
     if (err) {
       console.log('error: ', err);
       result(err, null);
@@ -42,7 +42,7 @@ MangaModel.findById = (mangaId, result) => {
 };
 
 MangaModel.getAll = (complement, result) => {
-  sql.query(`SELECT * FROM mangas ${complement}`, (err, res) => {
+  sql.query(`SELECT * FROM manga ${complement}`, (err, res) => {
     if (err) {
       console.log('error: ', err);
       result(null, err);
@@ -55,7 +55,7 @@ MangaModel.getAll = (complement, result) => {
 };
 
 MangaModel.getAllPaginate = (startIndex, perPage, complement, result) => {
-  sql.query(`SELECT * FROM mangas ${complement} LIMIT ${perPage} OFFSET ${startIndex}`, (err, res) => {
+  sql.query(`SELECT * FROM manga ${complement} LIMIT ${perPage} OFFSET ${startIndex}`, (err, res) => {
     if (err) {
       console.log('error: ', err);
       result(null, err);
@@ -91,7 +91,7 @@ MangaModel.updateById = (id, manga, result) => {
 };
 
 MangaModel.remove = (id, result) => {
-  sql.query('DELETE FROM mangas WHERE id = ?', id, (err, res) => {
+  sql.query('DELETE FROM manga WHERE id = ?', id, (err, res) => {
     if (err) {
       console.log('error: ', err);
       result(null, err);
@@ -110,7 +110,7 @@ MangaModel.remove = (id, result) => {
 };
 
 MangaModel.removeAll = result => {
-  sql.query('DELETE FROM mangas', (err, res) => {
+  sql.query('DELETE FROM manga', (err, res) => {
     if (err) {
       console.log('error: ', err);
       result(null, err);
@@ -123,14 +123,14 @@ MangaModel.removeAll = result => {
 };
 
 MangaModel.count = (complement, result) => {
-  sql.query(`SELECT COUNT(*) AS count FROM mangas ${complement}`, (err, res) => {
+  sql.query(`SELECT COUNT(*) AS count FROM manga ${complement}`, (err, res) => {
     if (err) {
       console.log('error: ', err);
       result(null, err);
       return;
     }
     
-    console.log(`${res[0].count} rows in mangas`);
+    console.log(`${res[0].count} rows in manga`);
     result(null, res[0].count);
   });
 }

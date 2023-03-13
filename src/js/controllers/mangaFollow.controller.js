@@ -1,6 +1,6 @@
-const { MangaListModel } = require('../models');
+const { MangaFollowModel } = require('../models');
 
-// Create and Save a new MangaList
+// Create and Save a new MangaFollow
 exports.create = (req, res) => {
   // Validate request
   if (!req.body) {
@@ -9,26 +9,25 @@ exports.create = (req, res) => {
     });
   }
 
-  // Create a MangaList
-  const mangaList = new MangaListModel({
+  // Create a MangaFollow
+  const mangaFollow = new MangaFollowModel({
     userId: req.body.userId,
     mangaId: req.body.mangaId,
-    favorite: req.body.favorite,
     current_chapter: req.body.current_chapter,
   });
 
-  // Save MangaList in the database
-  MangaListModel.create(mangaList, (err, data) => {
+  // Save MangaFollow in the database
+  MangaFollowModel.create(mangaFollow, (err, data) => {
     if (err)
       res.status(500).send({
         message:
-          err.message || 'Some error occurred while creating the MangaListModel.'
+          err.message || 'Some error occurred while creating the MangaFollowModel.'
       });
     else res.send(data);
   });
 };
 
-// Retrieve all MangaLists from the database.
+// Retrieve all MangaFollows from the database.
 exports.findAll = (req, res) => {
   let complement = '';
   if (req.query.filteredBy && req.query.filteredWith) {
@@ -41,18 +40,18 @@ exports.findAll = (req, res) => {
 
     const startIndex = (page - 1) * perPage;
 
-    MangaListModel.getAllPaginate(startIndex, perPage, complement, (err, data) => {
+    MangaFollowModel.getAllPaginate(startIndex, perPage, complement, (err, data) => {
       if (err)
         res.status(500).send({
           message:
-            err.message || 'Some error occurred while retrieving mangaLists.'
+            err.message || 'Some error occurred while retrieving mangaFollows.'
         });
       else {
-        MangaListModel.count((err, count) => {
+        MangaFollowModel.count((err, count) => {
           if (err)
             res.status(500).send({
               message:
-                err.message || 'Some error occurred while counting mangaLists.'
+                err.message || 'Some error occurred while counting mangaFollows.'
             });
           else {
             const results = {};
@@ -67,18 +66,18 @@ exports.findAll = (req, res) => {
     });
   }
   else {
-    MangaListModel.getAll(complement, (err, data) => {
+    MangaFollowModel.getAll(complement, (err, data) => {
       if (err)
         res.status(500).send({
           message:
-            err.message || 'Some error occurred while retrieving mangaLists.'
+            err.message || 'Some error occurred while retrieving mangaFollows.'
         });
       else res.send(data);
     });
   }
 };
 
-// Find a single MangaList with a mangaListId
+// Find a single MangaFollow with a mangaFollowId
 exports.findOne = (req, res) => {
   let complement = '';
   if (req.query.filteredBy && req.query.filteredWith) {
@@ -91,24 +90,24 @@ exports.findOne = (req, res) => {
 
     const startIndex = (page - 1) * perPage;
 
-    MangaListModel.findByIdPaginate(req.params.userId, req.params.mangaId, startIndex, perPage, complement, (err, data) => {
+    MangaFollowModel.findByIdPaginate(req.params.userId, req.params.mangaId, startIndex, perPage, complement, (err, data) => {
       if (err) {
         if (err.kind === 'not_found') {
           res.status(404).send({
-            message: `Not found MangaList with userId ${req.params.userId} and mangaId ${req.params.mangaId}.`
+            message: `Not found MangaFollow with userId ${req.params.userId} and mangaId ${req.params.mangaId}.`
           });
         } else {
           res.status(500).send({
-            message: `Error retrieving MangaList with userId ${req.params.userId} and mangaId ${req.params.mangaId}.`
+            message: `Error retrieving MangaFollow with userId ${req.params.userId} and mangaId ${req.params.mangaId}.`
           });
         }
       }
       else {
-        MangaListModel.countById(req.params.userId, req.params.mangaId, complement, (err, count) => {
+        MangaFollowModel.countById(req.params.userId, req.params.mangaId, complement, (err, count) => {
           if (err)
             res.status(500).send({
               message:
-                err.message || 'Some error occurred while counting mangaLists.'
+                err.message || 'Some error occurred while counting mangaFollows.'
             });
           else {
             const results = {};
@@ -123,15 +122,15 @@ exports.findOne = (req, res) => {
     });
   }
   else {
-    MangaListModel.findById(req.params.userId, req.params.mangaId, complement, (err, data) => {
+    MangaFollowModel.findById(req.params.userId, req.params.mangaId, complement, (err, data) => {
       if (err) {
         if (err.kind === 'not_found') {
           res.status(404).send({
-            message: `Not found MangaList with userId ${req.params.userId} and mangaId ${req.params.mangaId}.`
+            message: `Not found MangaFollow with userId ${req.params.userId} and mangaId ${req.params.mangaId}.`
           });
         } else {
           res.status(500).send({
-            message: `Error retrieving MangaList with userId ${req.params.userId} and mangaId ${req.params.mangaId}.`
+            message: `Error retrieving MangaFollow with userId ${req.params.userId} and mangaId ${req.params.mangaId}.`
           });
         }
       } else res.send(data);
@@ -139,7 +138,7 @@ exports.findOne = (req, res) => {
   }
 };
 
-// Update a MangaList identified by the mangaListId in the request
+// Update a MangaFollow identified by the mangaFollowId in the request
 exports.update = (req, res) => {
   // Validate Request
   if (!req.body) {
@@ -148,15 +147,15 @@ exports.update = (req, res) => {
     });
   }
 
-  MangaListModel.updateById(req.params.userId, req.params.mangaId, new MangaListModel(req.body), (err, data) => {
+  MangaFollowModel.updateById(req.params.userId, req.params.mangaId, new MangaFollowModel(req.body), (err, data) => {
     if (err) {
       if (err.kind === 'not_found') {
         res.status(404).send({
-          message: `Not found MangaList with userId ${req.params.userId} and mangaId ${req.params.mangaId}.`
+          message: `Not found MangaFollow with userId ${req.params.userId} and mangaId ${req.params.mangaId}.`
         });
       } else {
         res.status(500).send({
-          message: `Error updating MangaList with userId ${req.params.userId} and mangaId ${req.params.mangaId}.`
+          message: `Error updating MangaFollow with userId ${req.params.userId} and mangaId ${req.params.mangaId}.`
         });
       }
     } else res.send(data);
@@ -164,31 +163,31 @@ exports.update = (req, res) => {
   );
 };
 
-// Delete a MangaList with the specified mangaListId in the request
+// Delete a MangaFollow with the specified mangaFollowId in the request
 exports.delete = (req, res) => {
-  MangaListModel.remove(req.params.userId, req.params.mangaId, (err, data) => {
+  MangaFollowModel.remove(req.params.userId, req.params.mangaId, (err, data) => {
     if (err) {
       if (err.kind === 'not_found') {
         res.status(404).send({
-          message: `Not found MangaList with id userId ${req.params.userId} and mangaId ${req.params.mangaId}.`
+          message: `Not found MangaFollow with id userId ${req.params.userId} and mangaId ${req.params.mangaId}.`
         });
       } else {
         res.status(500).send({
-          message: `Could not delete MangaList with userId ${req.params.userId} and mangaId ${req.params.mangaId}.`
+          message: `Could not delete MangaFollow with userId ${req.params.userId} and mangaId ${req.params.mangaId}.`
         });
       }
-    } else res.send({ message: `MangaList was deleted successfully!` });
+    } else res.send({ message: `MangaFollow was deleted successfully!` });
   });
 };
 
-// Delete all MangaLists from the database.
+// Delete all MangaFollows from the database.
 exports.deleteAll = (req, res) => {
-  MangaListModel.removeAll((err, data) => {
+  MangaFollowModel.removeAll((err, data) => {
     if (err)
       res.status(500).send({
         message:
-          err.message || 'Some error occurred while removing all mangaLists.'
+          err.message || 'Some error occurred while removing all mangaFollows.'
       });
-    else res.send({ message: `All MangaLists were deleted successfully!` });
+    else res.send({ message: `All MangaFollows were deleted successfully!` });
   });
 };

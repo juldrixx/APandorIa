@@ -20,7 +20,7 @@ RoleModel.create = (newRole, result) => {
 };
 
 RoleModel.findById = (roleId, result) => {
-  sql.query(`SELECT * FROM roles WHERE id = ${roleId}`, (err, res) => {
+  sql.query(`SELECT * FROM role WHERE id = ${roleId}`, (err, res) => {
     if (err) {
       console.log('error: ', err);
       result(err, null);
@@ -39,7 +39,7 @@ RoleModel.findById = (roleId, result) => {
 };
 
 RoleModel.getAll = (complement = '', result) => {
-  sql.query(`SELECT * FROM roles ${complement}`, (err, res) => {
+  sql.query(`SELECT * FROM role ${complement}`, (err, res) => {
     if (err) {
       console.log('error: ', err);
       result(null, err);
@@ -52,7 +52,7 @@ RoleModel.getAll = (complement = '', result) => {
 };
 
 RoleModel.getAllPaginate = (startIndex, perPage, complement = '', result) => {
-  sql.query(`SELECT * FROM roles ${complement} LIMIT ${perPage} OFFSET ${startIndex}`, (err, res) => {
+  sql.query(`SELECT * FROM role ${complement} LIMIT ${perPage} OFFSET ${startIndex}`, (err, res) => {
     if (err) {
       console.log('error: ', err);
       result(null, err);
@@ -88,7 +88,7 @@ RoleModel.updateById = (id, role, result) => {
 };
 
 RoleModel.remove = (id, result) => {
-  sql.query('DELETE FROM roles WHERE id = ?', id, (err, res) => {
+  sql.query('DELETE FROM role WHERE id = ?', id, (err, res) => {
     if (err) {
       console.log('error: ', err);
       result(null, err);
@@ -107,7 +107,7 @@ RoleModel.remove = (id, result) => {
 };
 
 RoleModel.removeAll = result => {
-  sql.query('DELETE FROM roles', (err, res) => {
+  sql.query('DELETE FROM role', (err, res) => {
     if (err) {
       console.log('error: ', err);
       result(null, err);
@@ -120,7 +120,7 @@ RoleModel.removeAll = result => {
 };
 
 RoleModel.count = (complement = '', result) => {
-  sql.query(`SELECT COUNT(*) AS count FROM roles ${complement}`, (err, res) => {
+  sql.query(`SELECT COUNT(*) AS count FROM role ${complement}`, (err, res) => {
     if (err) {
       console.log('error: ', err);
       result(null, err);

@@ -23,7 +23,7 @@ UserModel.create = (newUser, result) => {
 };
 
 UserModel.findById = (userId, result) => {
-  sql.query(`SELECT * FROM users WHERE id = ${userId}`, (err, res) => {
+  sql.query(`SELECT * FROM user WHERE id = ${userId}`, (err, res) => {
     if (err) {
       console.log('error: ', err);
       result(err, null);
@@ -42,7 +42,7 @@ UserModel.findById = (userId, result) => {
 };
 
 UserModel.getAll = (complement = '', result) => {
-  sql.query(`SELECT * FROM users ${complement}`, (err, res) => {
+  sql.query(`SELECT * FROM user ${complement}`, (err, res) => {
     if (err) {
       console.log('error: ', err);
       result(null, err);
@@ -55,7 +55,7 @@ UserModel.getAll = (complement = '', result) => {
 };
 
 UserModel.getAllPaginate = (startIndex, perPage, complement = '', result) => {
-  sql.query(`SELECT * FROM users ${complement} LIMIT ${perPage} OFFSET ${startIndex}`, (err, res) => {
+  sql.query(`SELECT * FROM user ${complement} LIMIT ${perPage} OFFSET ${startIndex}`, (err, res) => {
     if (err) {
       console.log('error: ', err);
       result(null, err);
@@ -91,7 +91,7 @@ UserModel.updateById = (id, user, result) => {
 };
 
 UserModel.remove = (id, result) => {
-  sql.query('DELETE FROM users WHERE id = ?', id, (err, res) => {
+  sql.query('DELETE FROM user WHERE id = ?', id, (err, res) => {
     if (err) {
       console.log('error: ', err);
       result(null, err);
@@ -110,7 +110,7 @@ UserModel.remove = (id, result) => {
 };
 
 UserModel.removeAll = result => {
-  sql.query('DELETE FROM users', (err, res) => {
+  sql.query('DELETE FROM user', (err, res) => {
     if (err) {
       console.log('error: ', err);
       result(null, err);
@@ -123,7 +123,7 @@ UserModel.removeAll = result => {
 };
 
 UserModel.count = (complement = '', result) => {
-  sql.query(`SELECT COUNT(*) AS count FROM users ${complement}`, (err, res) => {
+  sql.query(`SELECT COUNT(*) AS count FROM user ${complement}`, (err, res) => {
     if (err) {
       console.log('error: ', err);
       result(null, err);
@@ -136,7 +136,7 @@ UserModel.count = (complement = '', result) => {
 }
 
 UserModel.findByUsername = (username, result) => {
-  sql.query(`SELECT * FROM users WHERE username = "${username}"`, (err, res) => {
+  sql.query(`SELECT * FROM user WHERE username = "${username}"`, (err, res) => {
     if (err) {
       console.log('error: ', err);
       result(err, null);

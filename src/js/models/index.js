@@ -1,6 +1,6 @@
 module.exports = {
   UserModel: require('./user.model'),
   MangaModel: require('./manga.model'),
-  MangaListModel: require('./mangaList.model'),
+  MangaFollowModel: require('./mangaFollow.model'),
   RoleModel: require('./role.model'),
 };

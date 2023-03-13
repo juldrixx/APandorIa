@@ -5,7 +5,7 @@ const { MangaController } = require('../controllers');
 const { MangadexUtil } = require('../utils');
 
 router.use('/search', routes.MangaSearchRoute);
-router.use('/list', routes.MangaListRoute);
+router.use('/follow', routes.MangaFollowRoute);
 
 /**
  * @swagger

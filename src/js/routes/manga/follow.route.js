@@ -1,13 +1,13 @@
 const express = require('express');
-const { MangaListController } = require('../../controllers');
+const { MangaFollowController } = require('../../controllers');
 const router = express.Router();
 
 /**
  * @swagger
- * /mangas/list:
+ * /mangas/follow:
  *  post:
- *    summary: Create a new MangaList
- *    tags: [MangaList]
+ *    summary: Create a new MangaFollow
+ *    tags: [MangaFollow]
  *    security:
  *      - bearerAuth: []
  *    requestBody:
@@ -18,15 +18,12 @@ const router = express.Router();
  *            required:
  *              - userId
  *              - mangaId
- *              - favorite
  *              - current_chapter
  *            properties:
  *              userId:
  *                type: integer
  *              mangaId:
  *                type: integer
- *              favorite:
- *                type: boolean
  *              current_chapter:
  *                type: integer
  *    responses:
@@ -37,14 +34,14 @@ const router = express.Router();
  *      '500':
  *        description: Internal Server Error
  */
-router.post('/', MangaListController.create);
+router.post('/', MangaFollowController.create);
 
 /**
  * @swagger
- * /mangas/list:
+ * /mangas/follow:
  *  get:
- *    summary: Retrieve all MangaLists
- *    tags: [MangaList]
+ *    summary: Retrieve all MangaFollows
+ *    tags: [MangaFollow]
  *    security:
  *      - bearerAuth: []
  *    parameters:
@@ -76,14 +73,14 @@ router.post('/', MangaListController.create);
  *      '500':
  *        description: Internal Server Error
  */
-router.get('/', MangaListController.findAll);
+router.get('/', MangaFollowController.findAll);
 
 /**
  * @swagger
- * /mangas/list/{userId}/{mangaId}:
+ * /mangas/follow/{userId}/{mangaId}:
  *  get:
- *    summary: Retrieve a single MangaList with mangaListId
- *    tags: [MangaList]
+ *    summary: Retrieve a single MangaFollow with mangaFollowId
+ *    tags: [MangaFollow]
  *    security:
  *      - bearerAuth: []
  *    parameters:
@@ -124,10 +121,10 @@ router.get('/', MangaListController.findAll);
  *        description: Forbidden
  *      '500':
  *        description: Internal Server Error
- * /mangas/list/{userId}:
+ * /mangas/follow/{userId}:
  *  get:
- *    summary: Retrieve a single MangaList with mangaListId
- *    tags: [MangaList]
+ *    summary: Retrieve a single MangaFollow with mangaFollowId
+ *    tags: [MangaFollow]
  *    security:
  *      - bearerAuth: []
  *    parameters:
@@ -164,14 +161,14 @@ router.get('/', MangaListController.findAll);
  *      '500':
  *        description: Internal Server Error
  */
-router.get('/:userId/:mangaId?', MangaListController.findOne);
+router.get('/:userId/:mangaId?', MangaFollowController.findOne);
 
 /**
  * @swagger
- * /mangas/list/{userId}/{mangaId}:
+ * /mangas/follow/{userId}/{mangaId}:
  *  put:
- *    summary: Update a MangaList with mangaListId
- *    tags: [MangaList]
+ *    summary: Update a MangaFollow with mangaFollowId
+ *    tags: [MangaFollow]
  *    security:
  *      - bearerAuth: []
  *    parameters:
@@ -191,17 +188,14 @@ router.get('/:userId/:mangaId?', MangaListController.findOne);
  *          schema:
  *            type: object
  *            required:
- *              - mangaListId
+ *              - mangaFollowId
  *              - mangaId
- *              - favorite
  *              - current_chapter
  *            properties:
- *              mangaListId:
+ *              mangaFollowId:
  *                type: integer
  *              mangaId:
  *                type: integer
- *              favorite:
- *                type: boolean
  *              current_chapter:
  *                type: integer
  *    responses:
@@ -212,14 +206,14 @@ router.get('/:userId/:mangaId?', MangaListController.findOne);
  *      '500':
  *        description: Internal Server Error
  */
-router.put('/:userId/:mangaId', MangaListController.update);
+router.put('/:userId/:mangaId', MangaFollowController.update);
 
 /**
  * @swagger
- * /mangas/list/{userId}/{mangaId}:
+ * /mangas/follow/{userId}/{mangaId}:
  *  delete:
- *    summary: Delete a MangaList with mangaListId
- *    tags: [MangaList]
+ *    summary: Delete a MangaFollow with mangaFollowId
+ *    tags: [MangaFollow]
  *    security:
  *      - bearerAuth: []
  *    parameters:
@@ -240,10 +234,10 @@ router.put('/:userId/:mangaId', MangaListController.update);
  *        description: Forbidden
  *      '500':
  *        description: Internal Server Error
- * /mangas/list/{userId}:
+ * /mangas/follow/{userId}:
  *  delete:
- *    summary: Delete a MangaList with mangaListId
- *    tags: [MangaList]
+ *    summary: Delete a MangaFollow with mangaFollowId
+ *    tags: [MangaFollow]
  *    security:
  *      - bearerAuth: []
  *    parameters:
@@ -260,14 +254,14 @@ router.put('/:userId/:mangaId', MangaListController.update);
  *      '500':
  *        description: Internal Server Error
  */
-router.delete('/:userId/:mangaId?', MangaListController.delete);
+router.delete('/:userId/:mangaId?', MangaFollowController.delete);
 
 /**
  * @swagger
- * /mangas/list:
+ * /mangas/follow:
  *  delete:
- *    summary: Delete all the MangaLists
- *    tags: [MangaList]
+ *    summary: Delete all the MangaFollows
+ *    tags: [MangaFollow]
  *    security:
  *      - bearerAuth: []
  *    responses:
@@ -278,6 +272,6 @@ router.delete('/:userId/:mangaId?', MangaListController.delete);
  *      '500':
  *        description: Internal Server Error
  */
-router.delete('/', MangaListController.deleteAll);
+router.delete('/', MangaFollowController.deleteAll);
 
 module.exports = router;
